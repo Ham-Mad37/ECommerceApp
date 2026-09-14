@@ -490,4 +490,4 @@ $RECYCLE.BIN/
 4
 **/bin/
 5
-**/obj/
+**/obj/git restore --staged .vscode/settings.json
