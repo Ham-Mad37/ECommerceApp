@@ -480,3 +480,14 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+.ignore
+1
+.vs/
+2
+.vscode/
+3
+ 
+4
+**/bin/
+5
+**/obj/
