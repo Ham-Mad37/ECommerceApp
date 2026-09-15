@@ -1,5 +1,6 @@
 using ECommerceApp.Api.Data;
 using ECommerceApp.Api.DTOs.Products;
+using ECommerceApp.Api.Mapping;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProductDtoValidator>();
-
+builder.Services.AddAutoMapper(typeof(ProductProfile).Assembly);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
