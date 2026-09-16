@@ -56,5 +56,11 @@ namespace ECommerceApp.Api.Controller
             
             return NoContent();
         }
+
+        [HttpGet("test-error")]
+        public IActionResult TestError()
+        {
+            throw new Exception("this is a test exception form products controller");
+        }
     }
 }
