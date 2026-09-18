@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using ECommerceApp.Api.Models;
 using ECommerceApp.Api.Services.Interfaces;
 using ECommerceApp.Api.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ECommerceApp.Api.Controller
 {
@@ -38,12 +39,14 @@ namespace ECommerceApp.Api.Controller
             }
             return Ok(product);
         }
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto dto)
         {
             var product = await productService.CreateProductAsync(dto);
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
         }
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, UpdateProductDto dto)
         {
@@ -52,6 +55,7 @@ namespace ECommerceApp.Api.Controller
                 return NotFound();
             return Ok(product);
         }
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
