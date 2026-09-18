@@ -39,14 +39,14 @@ namespace ECommerceApp.Api.Controller
             }
             return Ok(product);
         }
-        [Authorize]
+        [Authorize(Roles="Admin")]
         [HttpPost]
         public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto dto)
         {
             var product = await productService.CreateProductAsync(dto);
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
         }
-        [Authorize]
+       [Authorize(Roles="Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, UpdateProductDto dto)
         {
@@ -55,7 +55,7 @@ namespace ECommerceApp.Api.Controller
                 return NotFound();
             return Ok(product);
         }
-        [Authorize]
+       [Authorize(Roles="Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
