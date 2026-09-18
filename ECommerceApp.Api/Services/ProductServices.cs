@@ -1,8 +1,10 @@
 using AutoMapper;
 using ECommerceApp.Api.Data;
+using ECommerceApp.Api.DTOs;
 using ECommerceApp.Api.DTOs.Products;
 using ECommerceApp.Api.Models;
 using ECommerceApp.Api.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApp.Api.Services
 {
@@ -32,11 +34,40 @@ namespace ECommerceApp.Api.Services
             return Task.FromResult(true);
         }
 
-        public Task<IEnumerable<ProductDto>> GetAllProductsAsync()
+        public async Task<(IEnumerable<ProductDto>Data,int TotalCount)> GetAllProductsAsync(ProductQuery querey)
         {
-            var products = _context.Products.ToList();
-            var productDtos = _mapper.Map<IEnumerable<ProductDto>>(products);
-            return Task.FromResult(productDtos);
+            var productQuery = _context.Products.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(querey.Search))
+            {
+                productQuery = productQuery.Where(p => p.Name.Contains(querey.Search));
+            }
+            if (querey.MinPrice.HasValue)
+            {
+                productQuery = productQuery.Where(p => p.Price >= querey.MinPrice.Value);
+            }
+            if (querey.MaxPrice.HasValue)
+            {
+                productQuery = productQuery.Where(p => p.Price <= querey.MaxPrice.Value);
+            }
+            var totalCount = await productQuery.CountAsync();
+            productQuery = querey.SortBy?.ToLower() switch
+            {
+                "price" => querey.Descending
+                    ? productQuery.OrderByDescending(p => p.Price)
+                    : productQuery.OrderBy(p => p.Price),
+                "name" => querey.Descending
+                    ? productQuery.OrderByDescending(p => p.Name)
+                    : productQuery.OrderBy(p => p.Name),
+                _ => productQuery.OrderBy(p => p.Id)
+            };
+            var product = await productQuery
+                .Skip((querey.Page - 1) * querey.PageSize)
+                .Take(querey.PageSize)
+                .ToListAsync();
+            var data = _mapper.Map<IEnumerable<ProductDto>>(product);
+            return (data, totalCount);
+
+
         }
 
         public Task<ProductDto?> GetProductByIdAsync(int productId)

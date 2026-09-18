@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ECommerceApp.Api.Models;
 using ECommerceApp.Api.Services.Interfaces;
+using ECommerceApp.Api.DTOs;
 
 namespace ECommerceApp.Api.Controller
 {
@@ -14,11 +15,17 @@ namespace ECommerceApp.Api.Controller
     {
         //Get All Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
+        public async Task<ActionResult> GetProducts([FromQuery] ProductQuery query)
         {
-            var products = await productService.GetAllProductsAsync();
-           
-            return Ok(products);
+            var (data,totalCount) = await productService.GetAllProductsAsync(query);
+            var response = new
+            {
+                data,
+                totalCount,
+                query.Page,
+                query.PageSize
+            };
+            return Ok(response);
         }
         // Get Product By Id
         [HttpGet("{id}")]
@@ -57,10 +64,6 @@ namespace ECommerceApp.Api.Controller
             return NoContent();
         }
 
-        [HttpGet("test-error")]
-        public IActionResult TestError()
-        {
-            throw new Exception("this is a test exception form products controller");
-        }
+       
     }
 }
