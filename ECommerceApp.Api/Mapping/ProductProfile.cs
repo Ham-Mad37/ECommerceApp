@@ -19,6 +19,8 @@ namespace ECommerceApp.Api.Mapping
             CreateMap<Cart, CartDto>()
                 .ForMember(dest => dest.CartId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.CartItems));
+            CreateMap<OrderItem, OrderItemDto>();
+            CreateMap<Order, OrderDto>();
         }
     }
 }

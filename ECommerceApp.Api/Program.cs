@@ -57,6 +57,7 @@ builder.Services.AddAutoMapper(typeof(ProductProfile).Assembly);
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
